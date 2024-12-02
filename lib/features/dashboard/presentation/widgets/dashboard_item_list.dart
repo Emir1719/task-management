@@ -10,13 +10,11 @@ class DashboardItemList extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = getIt<DashboardService>().getDashboardItems();
 
-    return Expanded(
-      child: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return DashboardCard(item: items[index]);
-        },
-      ),
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        return DashboardCard(item: items[index]);
+      },
     );
   }
 }

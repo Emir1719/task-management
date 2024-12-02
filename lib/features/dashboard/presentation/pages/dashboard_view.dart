@@ -1,33 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_management/features/dashboard/data/models/screen_size.dart';
-import 'package:task_management/features/dashboard/presentation/pages/dashboard_desktop_view.dart';
-import 'package:task_management/features/dashboard/presentation/pages/dashboard_mobile_view.dart';
-import 'package:task_management/features/dashboard/presentation/pages/dashboard_tablet_view.dart';
+import 'package:task_management/features/dashboard/presentation/pages/dashboard_main_view.dart';
+import 'package:task_management/features/dashboard/presentation/pages/dashboard_menu_view.dart';
+import 'package:task_management/features/dashboard/presentation/providers/screen_notifier.dart';
 import 'package:task_management/features/dashboard/presentation/widgets/dashboard_drawer.dart';
 
-class DashboardView extends StatelessWidget {
+class DashboardView extends ConsumerWidget {
   const DashboardView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    var width = getScreenSize(MediaQuery.of(context).size.width) != ScreenSize.desktop;
+  Widget build(BuildContext context, WidgetRef ref) {
+    ScreenSize screenSize = ref.watch(screenNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Dashboard')),
-      drawer: width ? const DashboardDrawer() : null,
+      drawer: screenSize != ScreenSize.desktop ? const DashboardDrawer() : null,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          ScreenSize screenSize = getScreenSize(constraints.maxWidth);
+          // Post frame callback ile provider'ı güncelliyoruz
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ref.read(screenNotifierProvider.notifier).changeScreenType(constraints.maxWidth);
+          });
 
-          // Use different layouts based on screen size
-          switch (screenSize) {
-            case ScreenSize.mobile:
-              return const DashboardMobileView();
-            case ScreenSize.tablet:
-              return const DashboardTabletView();
-            case ScreenSize.desktop:
-              return const DashboardDesktopView();
-          }
+          return const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DashboardMenuView(),
+              DashboardMainView(),
+            ],
+          );
         },
       ),
     );

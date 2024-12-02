@@ -8,14 +8,3 @@ enum ScreenSize {
 
   const ScreenSize(this.widthLimit);
 }
-
-// Helper function to get screen size
-ScreenSize getScreenSize(double width) {
-  if (width < ScreenSize.mobile.widthLimit) {
-    return ScreenSize.mobile; // Mobile screen (e.g., phone)
-  } else if (width < ScreenSize.tablet.widthLimit) {
-    return ScreenSize.tablet; // Tablet screen (e.g., tablet)
-  } else {
-    return ScreenSize.desktop; // Desktop screen (e.g., desktop)
-  }
-}
