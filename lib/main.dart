@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:task_management/core/config/dependeny_injection.dart';
+import 'package:task_management/core/theme/app_color_scheme.dart';
+import 'package:task_management/core/theme/app_theme.dart';
+import 'package:task_management/features/dashboard/presentation/pages/dashboard_view.dart';
 
-void main() {
-  runApp(const MainApp());
+void main() async {
+  await setup();
+  runApp(const ProviderScope(child: MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -9,12 +15,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme(AppColorScheme.light).theme(),
+      home: const DashboardView(),
     );
   }
 }
